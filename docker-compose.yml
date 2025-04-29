@@ -1,9 +1,12 @@
 version: "3.8"
 
 services:
-  db:
+  go-ddd-db:
     image: postgres:14
+    container_name: go-ddd-db
     restart: always
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -13,29 +16,31 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
     networks:
-      - backend
+      - go-ddd-backend
 
-  api:
-    build: .
+  go-ddd-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-ddd-api
     ports:
-      - "8080:8080"
+      - "3003:3003"
     depends_on:
-      - db
+      - go-ddd-db
+    volumes:
+      - ./.env:/app/.env
     environment:
-      - DB_HOST=db
+      - DB_HOST=go-ddd-db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=go_ddd
       - DB_PORT=5432
       - JWT_SECRET=mysecret
-    volumes:
-      - .:/app
-    command: ["air"]
     networks:
-      - backend
+      - go-ddd-backend
 
 volumes:
   pg-data:
 
 networks:
-  backend:
+  go-ddd-backend:

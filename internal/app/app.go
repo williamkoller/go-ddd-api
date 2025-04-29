@@ -22,6 +22,9 @@ func Start() {
 
 	r := SetupRouter(userHandler)
 
-	port := config.GetEnv("APP_PORT", "8080")
-	r.Run(":" + port)
+	port := config.GetEnv("APP_PORT", "3003")
+	err = r.Run(":" + port)
+	if err != nil {
+		return
+	}
 }

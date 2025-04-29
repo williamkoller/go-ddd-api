@@ -8,9 +8,11 @@ import (
 )
 
 func LoadEnv() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Println("No .env file found, using system environment variables")
 	}
+
+	log.Printf("Environment variables loaded from .env file")
 }
 
 func GetEnv(key, fallback string) string {
