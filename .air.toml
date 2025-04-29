@@ -1,0 +1,19 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/main ./cmd/main.go"
+bin = "./tmp/main"
+full_bin = "false"
+delay = 1000
+exclude_dir = ["internal/docs", "tmp", "vendor"]
+exclude_file = ["*.md"]
+
+[log]
+time = true
+
+[color]
+main = "yellow"
+watcher = "cyan"
+build = "green"
+runner = "magenta"
