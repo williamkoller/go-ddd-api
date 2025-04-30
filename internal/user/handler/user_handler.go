@@ -19,6 +19,16 @@ func NewUserHandler(uc *usecase.UserUseCase) *UserHandler {
 	return &UserHandler{uc}
 }
 
+// Register godoc
+// @Summary Criar usuário
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param user body domain.User true "Usuário a ser registrado"
+// @Success 201 {object} domain.User
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/register [post]
 func (h *UserHandler) Register(c *gin.Context) {
 	var user domain.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -32,6 +42,17 @@ func (h *UserHandler) Register(c *gin.Context) {
 	response.Success(c, user)
 }
 
+// Login godoc
+// @Summary Login do usuário
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param credentials body map[string]string true "Credenciais de login"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/login [post]
 func (h *UserHandler) Login(c *gin.Context) {
 	var loginData struct {
 		Email    string `json:"email"`
@@ -57,6 +78,14 @@ func (h *UserHandler) Login(c *gin.Context) {
 	response.Success(c, gin.H{"token": token})
 }
 
+// List godoc
+// @Summary Listar todos os usuários
+// @Tags Users
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} domain.User
+// @Failure 500 {object} map[string]string
+// @Router /users [get]
 func (h *UserHandler) List(c *gin.Context) {
 	users, err := h.uc.List()
 	if err != nil {
@@ -66,6 +95,18 @@ func (h *UserHandler) List(c *gin.Context) {
 	response.Success(c, users)
 }
 
+// Update godoc
+// @Summary Atualizar usuário
+// @Tags Users
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "ID do usuário"
+// @Param user body domain.User true "Dados atualizados"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/{id} [put]
 func (h *UserHandler) Update(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -87,6 +128,16 @@ func (h *UserHandler) Update(c *gin.Context) {
 	response.Success(c, gin.H{"message": "updated successfully"})
 }
 
+// Delete godoc
+// @Summary Deletar usuário
+// @Tags Users
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "ID do usuário"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /users/{id} [delete]
 func (h *UserHandler) Delete(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
