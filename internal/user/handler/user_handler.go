@@ -5,8 +5,10 @@ import (
 	"github.com/williamkoller/go-ddd-api/internal/user/domain"
 	"github.com/williamkoller/go-ddd-api/internal/user/usecase"
 	"github.com/williamkoller/go-ddd-api/pkg/response"
+	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +38,12 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 	if err := h.uc.Register(&user); err != nil {
+		log.Printf("[Register] Error %v", err.Error())
+		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") &&
+			strings.Contains(err.Error(), "users_email_key") {
+			response.Error(c, http.StatusConflict, "email already in use")
+			return
+		}
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
