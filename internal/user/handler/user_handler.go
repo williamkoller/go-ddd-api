@@ -37,6 +37,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	if err := h.uc.Register(&user); err != nil {
 		log.Printf("[Register] Error %v", err.Error())
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") &&
@@ -44,10 +45,11 @@ func (h *UserHandler) Register(c *gin.Context) {
 			response.Error(c, http.StatusConflict, "email already in use")
 			return
 		}
-		response.Error(c, http.StatusInternalServerError, err.Error())
+		response.Error(c, http.StatusServiceUnavailable, err.Error())
 		return
 	}
-	response.Success(c, user)
+
+	response.Created(c, user)
 }
 
 // Login godoc

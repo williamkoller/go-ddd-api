@@ -13,3 +13,9 @@ func Success(c *gin.Context, data interface{}) {
 		"data": data,
 	})
 }
+
+func Created(c *gin.Context, data interface{}) {
+	c.JSON(201, gin.H{
+		"data": data,
+	})
+}
